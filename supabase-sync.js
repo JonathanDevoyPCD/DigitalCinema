@@ -1,51 +1,27 @@
 /**
  * Supabase Sync Module
  * Handles cloud sync of Digital Slate edits to/from Supabase
+ * Credentials are embedded and auto-initialized
  */
 
 class SupabaseSync {
   constructor() {
-    this.url = null;
-    this.key = null;
+    // Embedded credentials - auto-configured
+    this.url = 'https://oqywbtcsfqafzwejztbu.supabase.co';
+    this.key = 'sb_publishable_9TZ8FIrgJC_TOZwpUdY_Lg_O9y1f7LS';
     this.isConnected = false;
     this.syncInProgress = false;
     this.lastSync = null;
-    this.loadConfig();
+    this.initialize();
   }
 
-  loadConfig() {
+  async initialize() {
     try {
-      const config = JSON.parse(localStorage.getItem('digital-slate-supabase') || 'null');
-      if (config && config.url && config.key) {
-        this.url = config.url;
-        this.key = config.key;
-        this.isConnected = true;
-      }
-    } catch (error) {
-      console.error('Failed to load Supabase config:', error);
-    }
-  }
-
-  saveConfig(url, key) {
-    try {
-      localStorage.setItem('digital-slate-supabase', JSON.stringify({ url, key }));
-      this.url = url;
-      this.key = key;
+      await this.testConnection();
       this.isConnected = true;
     } catch (error) {
-      console.error('Failed to save Supabase config:', error);
-      throw error;
-    }
-  }
-
-  clearConfig() {
-    try {
-      localStorage.removeItem('digital-slate-supabase');
-      this.url = null;
-      this.key = null;
+      console.error('Supabase connection failed on init:', error);
       this.isConnected = false;
-    } catch (error) {
-      console.error('Failed to clear Supabase config:', error);
     }
   }
 
