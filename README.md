@@ -2,22 +2,34 @@
 
 A touch-friendly, camera-ready slate for **Mission Possible: Operation China Speed**. The scene and shot list and suggested coverage come from the supplied PowerPoint, including the B-roll slates.
 
+## 🚀 Cloud Sync is Ready!
+
+**Your Supabase account is set up. To activate cloud sync:**
+
+👉 **[Read START_HERE.md](START_HERE.md)** ← 4-minute setup guide with SQL
+
+### What You Get
+- 📱 Edit on tablet, 💻 access on PC
+- ☁️ Free cloud backup (Supabase, 500 MB)
+- 🔄 Push/pull workflow (no credit card needed)
+- 🔐 Secure (credentials stored in browser only)
+
 ## Quick Start
 
 **On Your Tablet (On Set)**
 1. Choose a scene, then a shot
 2. Edit details (take number, setup, description)
 3. Tap **Present slate** to show the camera
-4. Use **Previous/Next shot/scene** controls to navigate without leaving presentation mode
+4. Use **Previous/Next** controls to navigate without leaving presentation mode
 5. Tap **Change setup** to adjust camera angles on the fly
 
-**Save to Cloud (Free Supabase)**
+**Save to Cloud**
 1. Tap **🔄 Sync** (top right) on your tablet
-2. Enter your Supabase credentials ([5-minute setup](CLOUD_SYNC.md))
+2. Enter your Supabase credentials ([in START_HERE.md](START_HERE.md))
 3. Tap **Push now** to upload your edits
 4. On your PC, tap **Pull latest** to download take numbers and setups
 
-[📖 Complete cloud sync guide](CLOUD_SYNC.md)
+[📖 Complete cloud sync guide](CLOUD_SYNC.md) | [⚙️ Setup guide](YOUR_SUPABASE_CREDENTIALS.md) | [📋 Quick reference](QUICK_START_SYNC.md)
 
 ## On Set
 
