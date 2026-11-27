@@ -159,6 +159,38 @@
     $('project-input').value = state.project;
     renderSuggestions();
     renderPreview();
+    const sceneIndex = SLATE_DATA.indexOf(scene);
+    const shotIndex = scene.shots.indexOf(shot);
+    $('previous-scene').disabled = sceneIndex === 0;
+    $('next-scene').disabled = sceneIndex === SLATE_DATA.length - 1;
+    $('previous-shot').disabled = sceneIndex === 0 && shotIndex === 0;
+    $('next-shot').disabled = sceneIndex === SLATE_DATA.length - 1 && shotIndex === scene.shots.length - 1;
+  }
+
+  function navigateScene(offset) {
+    const index = SLATE_DATA.indexOf(currentScene()) + offset;
+    const scene = SLATE_DATA[index];
+    if (!scene) return;
+    state.sceneId = scene.id;
+    state.shotId = scene.shots[0].id;
+    save();
+    render();
+  }
+
+  function navigateShot(offset) {
+    const scene = currentScene();
+    const shotIndex = scene.shots.indexOf(currentShot()) + offset;
+    let targetScene = scene;
+    let targetShot = scene.shots[shotIndex];
+    if (!targetShot) {
+      targetScene = SLATE_DATA[SLATE_DATA.indexOf(scene) + offset];
+      if (!targetScene) return;
+      targetShot = offset > 0 ? targetScene.shots[0] : targetScene.shots[targetScene.shots.length - 1];
+    }
+    state.sceneId = targetScene.id;
+    state.shotId = targetShot.id;
+    save();
+    render();
   }
 
   function setTake(value) {
@@ -190,6 +222,10 @@
   $('take-minus').addEventListener('click', () => setTake(Number(fields.take.value) - 1));
   $('take-plus').addEventListener('click', () => setTake(Number(fields.take.value) + 1));
   $('present-next').addEventListener('click', () => setTake(Number(fields.take.value) + 1));
+  $('previous-scene').addEventListener('click', () => navigateScene(-1));
+  $('next-scene').addEventListener('click', () => navigateScene(1));
+  $('previous-shot').addEventListener('click', () => navigateShot(-1));
+  $('next-shot').addEventListener('click', () => navigateShot(1));
   $('present-button').addEventListener('click', () => {
     setTake(fields.take.value);
     $('editor').hidden = true;
