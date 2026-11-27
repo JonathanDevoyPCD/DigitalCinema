@@ -1,5 +1,5 @@
--- Digital Slate Cloud Sync Table
--- Run this in Supabase SQL Editor to initialize the database
+-- Digital Slate Cloud Sync Table (Idempotent - safe to run multiple times)
+-- Run this in Supabase SQL Editor
 
 CREATE TABLE IF NOT EXISTS digital_slate (
   id BIGSERIAL PRIMARY KEY,
@@ -12,15 +12,18 @@ CREATE TABLE IF NOT EXISTS digital_slate (
 -- Enable Row Level Security
 ALTER TABLE digital_slate ENABLE ROW LEVEL SECURITY;
 
--- Allow anonymous users to insert
+-- Drop existing policies if they exist (safe approach)
+DROP POLICY IF EXISTS "Allow anon inserts" ON digital_slate;
+DROP POLICY IF EXISTS "Allow anon selects" ON digital_slate;
+DROP POLICY IF EXISTS "Allow anon updates" ON digital_slate;
+
+-- Create policies
 CREATE POLICY "Allow anon inserts" ON digital_slate
   FOR INSERT WITH CHECK (TRUE);
 
--- Allow anonymous users to select
 CREATE POLICY "Allow anon selects" ON digital_slate
   FOR SELECT USING (TRUE);
 
--- Allow anonymous users to update
 CREATE POLICY "Allow anon updates" ON digital_slate
   FOR UPDATE USING (TRUE);
 
