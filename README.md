@@ -2,17 +2,11 @@
 
 A touch-friendly, camera-ready slate for **Mission Possible: Operation China Speed**. The scene and shot list and suggested coverage come from the supplied PowerPoint, including the B-roll slates.
 
-## 🚀 Cloud Sync is Ready!
+## 🎬 Ready to Use
 
-**Your Supabase account is set up. To activate cloud sync:**
+Just open the app and start editing. Everything auto-saves locally and syncs to the cloud with one click.
 
-👉 **[Read START_HERE.md](START_HERE.md)** ← 4-minute setup guide with SQL
-
-### What You Get
-- 📱 Edit on tablet, 💻 access on PC
-- ☁️ Free cloud backup (Supabase, 500 MB)
-- 🔄 Push/pull workflow (no credit card needed)
-- 🔐 Secure (credentials stored in browser only)
+**Live App:** https://jonathandevoypcd.github.io/DigitalCinema/
 
 ## Quick Start
 
@@ -20,16 +14,24 @@ A touch-friendly, camera-ready slate for **Mission Possible: Operation China Spe
 1. Choose a scene, then a shot
 2. Edit details (take number, setup, description)
 3. Tap **Present slate** to show the camera
-4. Use **Previous/Next** controls to navigate without leaving presentation mode
+4. Use **Previous/Next** controls to navigate
 5. Tap **Change setup** to adjust camera angles on the fly
 
 **Save to Cloud**
-1. Tap **🔄 Sync** (top right) on your tablet
-2. Enter your Supabase credentials ([in START_HERE.md](START_HERE.md))
-3. Tap **Push now** to upload your edits
-4. On your PC, tap **Pull latest** to download take numbers and setups
+- Tap **🔄 Sync** (top right) to push all edits to cloud
+- Your changes are auto-saved locally too
+- On your PC, edits are stored in browser
 
-[📖 Complete cloud sync guide](CLOUD_SYNC.md) | [⚙️ Setup guide](YOUR_SUPABASE_CREDENTIALS.md) | [📋 Quick reference](QUICK_START_SYNC.md)
+## Features
+
+✅ **Touch-friendly tablet interface**  
+✅ **Landscape & portrait support**  
+✅ **Local storage** (auto-saves edits)  
+✅ **Cloud sync** (one-click push to Supabase)  
+✅ **Offline mode** (syncs when you're online again)  
+✅ **Suggested coverage** from PowerPoint  
+✅ **Live preview** pane  
+✅ **Quick navigation** between shots/scenes  
 
 ## On Set
 
@@ -39,7 +41,7 @@ A touch-friendly, camera-ready slate for **Mission Possible: Operation China Spe
 4. Tap **Change setup** in presentation mode to select suggested coverage or enter a custom setup. Tap **Next take** for a retake. Use the previous and next shot or scene controls to move between slates without leaving presentation mode. Shot navigation crosses scene boundaries; scene navigation opens that scene's first shot. Your saved edits and take number return when you revisit a shot.
 5. Tap **Back to editor** to change other details. Escape closes the setup picker or returns to the editor.
 
-Edits and take numbers are saved per shot in the browser on that device. For cross-device access and backup, use the cloud sync feature via Supabase (free tier, no credit card required).
+Edits and take numbers are saved per shot in the browser on that device. Cloud sync is automatic and stores backups in Supabase.
 
 The app is a static site; open `index.html` or serve this folder with any static web server. GitHub Pages can publish it from the `main` branch root. Internet access is needed for the hosted fonts; system fonts are used if they are unavailable.
 
