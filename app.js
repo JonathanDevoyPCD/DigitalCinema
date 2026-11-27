@@ -287,7 +287,7 @@
   // Sync button - push changes to cloud
   $('sync-button').addEventListener('click', async () => {
     if (!supabaseSync.isConnected) {
-      alert('Not connected to Supabase. Please check your internet connection.');
+      alert('⚠️ Not connected to Supabase.\n\nTo fix:\n1. Go to https://app.supabase.com\n2. Open your DigitalCinema project\n3. Go to SQL Editor\n4. Paste the contents of setup-supabase.sql\n5. Click Run\n6. Refresh this page');
       return;
     }
 

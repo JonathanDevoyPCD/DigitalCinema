@@ -39,12 +39,14 @@ class SupabaseSync {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        const errorText = await response.text();
+        console.error(`HTTP ${response.status}: ${response.statusText}`, errorText);
+        throw new Error(`HTTP ${response.status}: ${response.statusText} - Table may not exist. Run setup-supabase.sql in Supabase dashboard.`);
       }
 
       return true;
     } catch (error) {
-      console.error('Connection test failed:', error);
+      console.error('Connection test failed:', error.message);
       throw error;
     }
   }
