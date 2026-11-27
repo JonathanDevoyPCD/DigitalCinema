@@ -58,6 +58,7 @@
     state.edits[shot.id] = { ...state.edits[shot.id], [key]: value };
     save();
     renderPreview();
+    triggerAutoSync();
   }
 
   function renderScenes() {
@@ -213,11 +214,13 @@
     state.shotId = event.target.value;
     save();
     render();
+    triggerAutoSync();
   });
   $('project-input').addEventListener('input', (event) => {
     state.project = event.target.value;
     save();
     renderPreview();
+    triggerAutoSync();
   });
   for (const [key, field] of Object.entries(fields)) {
     if (key === 'take') {
@@ -274,40 +277,40 @@
     }
   });
 
-  // Auto-sync when changes are made
-  async function autoSync() {
-    if (!supabaseSync.isConnected) return;
-    try {
-      await supabaseSync.pushSlates(state);
-    } catch (error) {
-      console.error('Auto-sync failed:', error);
+  // Auto-sync after every change
+  function triggerAutoSync() {
+    if (supabaseSync.isConnected) {
+      try {
+        supabaseSync.pushSlates(state).catch(error => {
+          console.warn('Background sync failed:', error);
+        });
+      } catch (error) {
+        console.warn('Auto-sync error:', error);
+      }
     }
   }
 
-  // Sync button - push changes to cloud
-  $('sync-button').addEventListener('click', async () => {
-    if (!supabaseSync.isConnected) {
-      alert('⚠️ Not connected to Supabase.\n\nTo fix:\n1. Go to https://app.supabase.com\n2. Open your DigitalCinema project\n3. Go to SQL Editor\n4. Paste the contents of setup-supabase.sql\n5. Click Run\n6. Refresh this page');
-      return;
-    }
-
-    try {
-      $('sync-button').disabled = true;
-      $('sync-button').textContent = '⏳ Syncing...';
-      await supabaseSync.pushSlates(state);
-      $('sync-button').textContent = '✅ Synced!';
-      setTimeout(() => {
-        $('sync-button').textContent = '🔄 Sync';
-        $('sync-button').disabled = false;
-      }, 2000);
-    } catch (error) {
-      $('sync-button').textContent = '❌ Error';
-      setTimeout(() => {
-        $('sync-button').textContent = '🔄 Sync';
-        $('sync-button').disabled = false;
-      }, 2000);
-      console.error('Sync error:', error);
-    }
+  // Download button - export all slates as JSON
+  $('download-button').addEventListener('click', () => {
+    const exportData = {
+      project: state.project,
+      exportedAt: new Date().toISOString(),
+      edits: state.edits,
+      slates: SLATE_DATA
+    };
+    
+    const json = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `digital-slate-${state.project.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    console.log('Downloaded:', exportData);
   });
 
   render();
