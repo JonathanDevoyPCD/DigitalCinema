@@ -23,6 +23,23 @@
     showStorageWarning();
   }
 
+  // Load from cloud on startup if available
+  async function loadFromCloud() {
+    if (!supabaseSync.isConnected) return;
+    try {
+      const cloudData = await supabaseSync.pullSlates();
+      if (cloudData && cloudData.edits) {
+        // Merge cloud edits with local edits (cloud takes precedence if newer)
+        state.edits = { ...state.edits, ...cloudData.edits };
+        if (cloudData.project) state.project = cloudData.project;
+        save();
+        console.log('✅ Loaded from cloud');
+      }
+    } catch (error) {
+      console.warn('Could not load from cloud:', error);
+    }
+  }
+
   function showStorageWarning() {
     $('storage-warning').hidden = false;
     $('present-storage-warning').hidden = false;
@@ -314,4 +331,7 @@
   });
 
   render();
+  
+  // Load from cloud on page load (async, doesn't block UI)
+  loadFromCloud().then(() => render());
 })();
