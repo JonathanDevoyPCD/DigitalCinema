@@ -20,7 +20,12 @@
       state = { ...state, ...saved };
     }
   } catch (error) {
+    showStorageWarning();
+  }
+
+  function showStorageWarning() {
     $('storage-warning').hidden = false;
+    $('present-storage-warning').hidden = false;
   }
 
   function currentScene() {
@@ -35,7 +40,7 @@
     try {
       localStorage.setItem(storageKey, JSON.stringify(state));
     } catch (error) {
-      $('storage-warning').hidden = false;
+      showStorageWarning();
     }
   }
 
@@ -84,8 +89,7 @@
     }
   }
 
-  function renderSuggestions() {
-    const container = $('suggestions');
+  function renderSuggestions(container, onSelect) {
     container.replaceChildren();
     if (!currentShot().coverage.length) {
       const guidance = document.createElement('span');
@@ -98,13 +102,19 @@
       button.type = 'button';
       button.textContent = coverage;
       button.className = coverage === fields.setup.value ? 'selected' : '';
-      button.addEventListener('click', () => {
-        fields.setup.value = coverage;
-        updateField('setup', coverage);
-        renderSuggestions();
-      });
+      button.addEventListener('click', () => onSelect(coverage));
       container.append(button);
     }
+  }
+
+  function setSetup(value) {
+    fields.setup.value = value;
+    updateField('setup', value);
+    renderEditorSuggestions();
+  }
+
+  function renderEditorSuggestions() {
+    renderSuggestions($('suggestions'), setSetup);
   }
 
   function renderPreview() {
@@ -157,7 +167,7 @@
     const data = values();
     for (const [key, field] of Object.entries(fields)) field.value = data[key];
     $('project-input').value = state.project;
-    renderSuggestions();
+    renderEditorSuggestions();
     renderPreview();
     const sceneIndex = SLATE_DATA.indexOf(scene);
     const shotIndex = scene.shots.indexOf(shot);
@@ -215,7 +225,7 @@
     } else {
       field.addEventListener('input', () => {
         updateField(key, field.value);
-        if (key === 'setup') renderSuggestions();
+        if (key === 'setup') renderEditorSuggestions();
       });
     }
   }
@@ -226,6 +236,20 @@
   $('next-scene').addEventListener('click', () => navigateScene(1));
   $('previous-shot').addEventListener('click', () => navigateShot(-1));
   $('next-shot').addEventListener('click', () => navigateShot(1));
+  $('change-setup').addEventListener('click', () => {
+    $('present-setup-input').value = fields.setup.value;
+    renderSuggestions($('present-suggestions'), (coverage) => {
+      setSetup(coverage);
+      $('setup-dialog').close();
+    });
+    $('setup-dialog').showModal();
+  });
+  $('cancel-setup').addEventListener('click', () => $('setup-dialog').close());
+  $('setup-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    setSetup($('present-setup-input').value);
+    $('setup-dialog').close();
+  });
   $('present-button').addEventListener('click', () => {
     setTake(fields.take.value);
     $('editor').hidden = true;
@@ -241,7 +265,13 @@
   window.addEventListener('resize', fitPresentationNumbers);
   if (document.fonts) document.fonts.ready.then(fitPresentationNumbers);
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !$('presentation').hidden) $('back-button').click();
+    if (event.key !== 'Escape' || $('presentation').hidden) return;
+    if ($('setup-dialog').open) {
+      event.preventDefault();
+      $('setup-dialog').close();
+    } else {
+      $('back-button').click();
+    }
   });
   render();
 })();
