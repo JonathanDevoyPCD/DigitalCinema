@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111312">
+  <title>Digital Slate — Mission Possible</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="slates.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="app" id="editor">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Digital Slate home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>DIGITAL <strong>SLATE</strong></span>
+      </a>
+      <div class="topbar-right"><span class="status-dot"></span><span>YOUR ON-SET COMPANION</span></div>
+    </header>
+
+    <main class="workspace">
+      <aside class="sidebar">
+        <div class="section-label"><span>PRODUCTION</span><span>01 / 01</span></div>
+        <div class="production">
+          <div class="production-icon" aria-hidden="true">M<span>.</span></div>
+          <div><strong id="sidebar-project">Mission Possible</strong><small>Operation China Speed</small></div>
+        </div>
+        <div class="sidebar-heading"><span>SCENES</span><span id="scene-count"></span></div>
+        <nav id="scene-list" aria-label="Choose a scene"></nav>
+        <div class="sidebar-note"><span class="status-dot"></span> Changes saved on this device</div>
+      </aside>
+
+      <section class="content">
+        <div class="content-heading">
+          <div>
+            <div class="eyebrow"><span class="status-dot"></span> SLATE BUILDER <span class="slash">/</span> <span id="heading-scene"></span></div>
+            <h1>Ready when you are<span class="accent">.</span></h1>
+            <p>Set up your shot, then show the slate to camera.</p>
+          </div>
+          <span class="heading-index">ON SET <b> / </b> 01</span>
+        </div>
+
+        <div id="storage-warning" class="warning" role="alert" hidden>Changes could not be saved on this device. Check your browser storage settings; edits may be lost when you leave.</div>
+        <div class="editor-grid">
+          <div class="form-column">
+            <div class="card">
+              <div class="card-heading"><div><span class="step">01</span><h2>Choose your shot</h2></div><span class="card-meta">THE DETAILS</span></div>
+              <div class="field">
+                <label for="shot-select">SHOT <span>SELECT FROM SCENE</span></label>
+                <div class="select-wrap"><select id="shot-select"></select></div>
+              </div>
+              <div class="field-row">
+                <div class="field"><label for="scene-input">SCENE</label><input id="scene-input" maxlength="12" autocomplete="off"></div>
+                <div class="field"><label for="shot-input">SHOT ID</label><input id="shot-input" maxlength="18" autocomplete="off"></div>
+                <div class="field take-field"><label for="take-input">TAKE</label><div class="stepper"><button id="take-minus" type="button" aria-label="Previous take">−</button><input id="take-input" type="number" inputmode="numeric" min="1" max="9999" aria-label="Take number"><button id="take-plus" type="button" aria-label="Next take">+</button></div></div>
+              </div>
+              <div class="field"><label for="project-input">PROJECT NAME <span>APPLIES TO ALL SHOTS</span></label><input id="project-input" maxlength="60" autocomplete="off"></div>
+              <div class="field"><label for="scene-name-input">SCENE NAME</label><input id="scene-name-input" maxlength="60" autocomplete="off"></div>
+              <div class="field"><label for="description-input">SHOT DESCRIPTION</label><input id="description-input" maxlength="100" autocomplete="off"></div>
+              <div class="field"><label for="location-input">LOCATION</label><input id="location-input" maxlength="100" autocomplete="off"></div>
+            </div>
+
+            <div class="card setup-card">
+              <div class="card-heading"><div><span class="step">02</span><h2>Select your setup</h2></div><span class="card-meta">MAKE IT YOURS</span></div>
+              <div class="field"><label for="setup-input">SELECTED SETUP <span>EDIT OR CHOOSE BELOW</span></label><input id="setup-input" maxlength="100" placeholder="e.g. Wide shot, slow push-in" autocomplete="off"></div>
+              <div class="suggestion-label">SUGGESTED COVERAGE <span>— TAP TO SELECT</span></div>
+              <div id="suggestions" class="suggestions"></div>
+            </div>
+          </div>
+
+          <aside class="preview-column">
+            <div class="preview-top"><span>LIVE PREVIEW</span><span><span class="status-dot"></span> UP TO DATE</span></div>
+            <div class="preview-slate">
+              <div class="slate-stripe" aria-hidden="true"></div>
+              <div class="preview-inner">
+                <div class="preview-brand"><span id="preview-project"></span> / DIGITAL SLATE</div>
+                <div class="preview-scene-name" id="preview-scene-name"></div>
+                <div class="preview-numbers">
+                  <div><small>SCENE</small><strong id="preview-scene"></strong></div>
+                  <div><small>SHOT</small><strong id="preview-shot"></strong></div>
+                  <div><small>TAKE</small><strong id="preview-take"></strong></div>
+                </div>
+                <div class="preview-description" id="preview-description"></div>
+                <div class="preview-setup"><small>SELECTED SETUP</small><strong id="preview-setup"></strong></div>
+                <div class="preview-footer"><span>OPERATION CHINA SPEED</span><span>● &nbsp; READY TO ROLL</span></div>
+              </div>
+            </div>
+            <button type="button" class="present-button" id="present-button"><span>Present slate</span><span aria-hidden="true">↗</span></button>
+            <p class="present-hint">Opens a clean, camera-ready view <span>→</span></p>
+            <div class="tip"><span class="tip-icon">↻</span><div><strong>ANOTHER TAKE?</strong><p>Use the + button to keep your take number moving.</p></div></div>
+          </aside>
+        </div>
+        <footer class="footer"><span>DIGITAL SLATE <b> / </b> MISSION POSSIBLE</span><span>MADE FOR THE MOMENT BEFORE ACTION.</span></footer>
+      </section>
+    </main>
+  </div>
+
+  <section id="presentation" class="presentation" aria-label="Camera-ready slate" hidden>
+    <div class="presentation-stripe" aria-hidden="true"></div>
+    <div class="presentation-controls"><button type="button" id="back-button">← &nbsp; Back to editor</button><span>CAMERA-READY SLATE</span><button type="button" id="present-next">Next take &nbsp; +</button></div>
+    <div class="presentation-content">
+      <div class="present-header"><div><span class="present-kicker"><span id="present-project"></span> <b>/</b> DIGITAL SLATE</span><h2 id="present-scene-name"></h2></div><div class="present-ready"><span class="status-dot"></span> READY TO ROLL</div></div>
+      <div class="present-numbers">
+        <div><span>SCENE</span><strong id="present-scene"></strong></div>
+        <div><span>SHOT ID</span><strong id="present-shot"></strong></div>
+        <div><span>TAKE</span><strong id="present-take"></strong></div>
+      </div>
+      <div class="present-details"><div><span>SHOT DESCRIPTION</span><strong id="present-description"></strong></div><div><span>SELECTED SETUP</span><strong id="present-setup"></strong></div></div>
+      <div class="present-bottom"><span id="present-location"></span><span>DIGITAL SLATE &nbsp; / &nbsp; MISSION POSSIBLE</span></div>
+    </div>
+  </section>
+</body>
+</html>
