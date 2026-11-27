@@ -273,5 +273,111 @@
       $('back-button').click();
     }
   });
+
+  // Sync UI handlers
+  $('sync-button').addEventListener('click', () => {
+    $('sync-status-display').textContent = supabaseSync.getStatusDisplay();
+    if (supabaseSync.isConnected) {
+      $('supabase-url').value = supabaseSync.url;
+      $('supabase-key').value = supabaseSync.key;
+    }
+    $('sync-settings-dialog').showModal();
+  });
+
+  $('close-sync-dialog').addEventListener('click', () => {
+    $('sync-settings-dialog').close();
+  });
+
+  $('sync-settings-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const url = $('supabase-url').value.trim();
+    const key = $('supabase-key').value.trim();
+
+    if (!url || !key) {
+      alert('Please enter both URL and API key');
+      return;
+    }
+
+    try {
+      supabaseSync.url = url;
+      supabaseSync.key = key;
+      await supabaseSync.testConnection();
+      supabaseSync.saveConfig(url, key);
+      $('sync-status-display').textContent = supabaseSync.getStatusDisplay();
+      alert('Connected to Supabase successfully!');
+    } catch (error) {
+      alert(`Connection failed: ${error.message}`);
+    }
+  });
+
+  $('sync-push-btn').addEventListener('click', async () => {
+    if (!supabaseSync.isConnected) {
+      alert('Not connected to Supabase');
+      return;
+    }
+
+    try {
+      $('sync-push-btn').disabled = true;
+      $('sync-push-btn').textContent = 'Pushing...';
+      await supabaseSync.pushSlates(state);
+      $('sync-status-display').textContent = supabaseSync.getStatusDisplay();
+      alert('Slates pushed to cloud!');
+    } catch (error) {
+      alert(`Push failed: ${error.message}`);
+    } finally {
+      $('sync-push-btn').disabled = false;
+      $('sync-push-btn').textContent = 'Push now';
+    }
+  });
+
+  $('sync-pull-btn').addEventListener('click', async () => {
+    if (!supabaseSync.isConnected) {
+      alert('Not connected to Supabase');
+      return;
+    }
+
+    try {
+      $('sync-pull-btn').disabled = true;
+      $('sync-pull-btn').textContent = 'Pulling...';
+      const data = await supabaseSync.pullSlates();
+      
+      if (data && data.edits) {
+        const confirmMerge = confirm(
+          'Found data in cloud. Would you like to merge it with your current edits?\n\n' +
+          '(Cancel to replace completely)'
+        );
+
+        if (confirmMerge) {
+          state.edits = { ...state.edits, ...data.edits };
+        } else {
+          state.edits = data.edits;
+        }
+
+        if (data.project) state.project = data.project;
+        save();
+        render();
+        $('sync-status-display').textContent = supabaseSync.getStatusDisplay();
+        alert('Slates pulled from cloud!');
+      } else {
+        alert('No data found in cloud');
+      }
+    } catch (error) {
+      alert(`Pull failed: ${error.message}`);
+    } finally {
+      $('sync-pull-btn').disabled = false;
+      $('sync-pull-btn').textContent = 'Pull latest';
+    }
+  });
+
+  $('sync-disconnect-btn').addEventListener('click', () => {
+    if (confirm('Disconnect from Supabase? Your local data will remain.')) {
+      supabaseSync.clearConfig();
+      $('supabase-url').value = '';
+      $('supabase-key').value = '';
+      $('sync-status-display').textContent = supabaseSync.getStatusDisplay();
+      alert('Disconnected');
+    }
+  });
+
   render();
 })();

@@ -7,6 +7,7 @@
   <title>Digital Slate — Mission Possible</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="slates.js"></script>
+  <script defer src="supabase-sync.js"></script>
   <script defer src="app.js"></script>
 </head>
 <body>
@@ -16,7 +17,10 @@
         <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
         <span>DIGITAL <strong>SLATE</strong></span>
       </a>
-      <div class="topbar-right"><span class="status-dot"></span><span>YOUR ON-SET COMPANION</span></div>
+      <div class="topbar-right">
+        <button type="button" id="sync-button" class="sync-button" aria-label="Sync settings and push data">🔄 Sync</button>
+        <span class="status-dot"></span><span>YOUR ON-SET COMPANION</span>
+      </div>
     </header>
 
     <main class="workspace">
@@ -124,6 +128,37 @@
         <div class="field"><label for="present-setup-input">CUSTOM SETUP</label><input id="present-setup-input" maxlength="100" placeholder="e.g. Wide shot, slow push-in" autocomplete="off"></div>
         <button type="submit" class="dialog-save">Save setup</button>
       </form>
+    </dialog>
+
+    <dialog id="sync-settings-dialog" aria-labelledby="sync-settings-title">
+      <div class="dialog-heading"><h2 id="sync-settings-title">Cloud Sync Settings</h2><button type="button" id="close-sync-dialog" autofocus>Close</button></div>
+      <p class="dialog-hint">Connect to Supabase to sync your slates across devices.</p>
+      <div id="sync-status-display" class="sync-status-display"></div>
+      <form id="sync-settings-form">
+        <div class="field">
+          <label for="supabase-url">Supabase Project URL</label>
+          <input id="supabase-url" type="text" placeholder="https://xxxxxxxxxxxx.supabase.co" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="supabase-key">Supabase Anon Key</label>
+          <input id="supabase-key" type="password" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI..." autocomplete="off">
+        </div>
+        <div class="sync-buttons">
+          <button type="submit" class="dialog-save">Connect</button>
+          <button type="button" id="sync-push-btn" class="dialog-action">Push now</button>
+          <button type="button" id="sync-pull-btn" class="dialog-action">Pull latest</button>
+          <button type="button" id="sync-disconnect-btn" class="dialog-danger">Disconnect</button>
+        </div>
+      </form>
+      <div class="sync-help">
+        <strong>How to get your credentials:</strong>
+        <ol>
+          <li>Sign up at <a href="https://supabase.com" target="_blank">supabase.com</a></li>
+          <li>Create a project</li>
+          <li>Go to Settings → API</li>
+          <li>Copy Project URL and Anon Public Key</li>
+        </ol>
+      </div>
     </dialog>
   </section>
 </body>
